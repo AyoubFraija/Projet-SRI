@@ -3,6 +3,7 @@ import requests
 import os
 import PyPDF2
 from pathlib import Path
+import base64
 
 # Configuration de l'interface
 st.set_page_config(
@@ -62,19 +63,11 @@ def main():
                     if results:
                         for i, result in enumerate(results, 1):
                             with st.expander(f"{i}. {result['title']} (Score: {result['score']:.4f})"):
-                                st.write(f"Chemin du fichier: {result['path']}")
+                                with open(result['path'],"rb") as f:
+                                    base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+                                    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="800" height="800" type="application/pdf"></iframe>'
+                                    st.markdown(pdf_display, unsafe_allow_html=True)
                                 
-                                # Ajout d'un bouton pour visualiser le PDF
-                                if os.path.exists(result['path']):
-                                    try:
-                                        with open(result['path'], 'rb') as pdf_file:
-                                            pdf_reader = PyPDF2.PdfReader(pdf_file)
-                                            text = ""
-                                            for page in pdf_reader.pages:
-                                                text += page.extract_text() + "\n"
-                                            st.text_area("Aperçu du contenu:", text[:1000] + "...", height=200)
-                                    except Exception as e:
-                                        st.error(f"Erreur lors de la lecture du PDF: {e}")
                     else:
                         st.info("Aucun résultat trouvé")
                         
