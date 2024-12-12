@@ -62,11 +62,17 @@ def main():
                     
                     if results:
                         for i, result in enumerate(results, 1):
-                            with st.expander(f"{i}. {result['title']} (Score: {result['score']:.4f})"):
-                                with open(result['path'],"rb") as f:
-                                    base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-                                    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="800" height="800" type="application/pdf"></iframe>'
-                                    st.markdown(pdf_display, unsafe_allow_html=True)
+                            file_path = os.path.join(os.path.dirname(__file__), '..', result['path'])
+                            if os.path.exists(file_path):
+                                with st.expander(f"{i}. {result['title']} (Score: {result['score']:.4f})"):
+                                    with open(file_path, "rb") as f:
+                                        base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+                                        pdf_display = f'''
+                            <div style="display: flex; justify-content: center;">
+                                <iframe src="data:application/pdf;base64,{base64_pdf}" width="522" height="800" type="application/pdf"></iframe>
+                            </div>
+                            '''
+                                        st.markdown(pdf_display, unsafe_allow_html=True)
                                 
                     else:
                         st.info("Aucun résultat trouvé")
