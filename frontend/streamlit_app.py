@@ -13,6 +13,7 @@ st.set_page_config(
 )
 
 # URL de l'API
+# ma tsnach tbdl lport
 API_URL = "http://localhost:8000"
 
 def main():
