@@ -14,7 +14,7 @@ class DocumentIndexer:
         self.data_dir = data_dir
         self.nlp = spacy.load("fr_core_news_md")
         self.bert_model = SentenceTransformer('distiluse-base-multilingual-cased-v1')
-        
+        # self.bert_a
         # Création du schéma Whoosh
         self.schema = Schema(
             path=ID(stored=True),
